@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+<body id="body">
+    <header>
+        <nav class="navbar navbar-light bg-light">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="#">
+                <img src="img/cm.png" alt="" width="150" height="45" class="d-inline-block align-text-top">
+                <!-- CryptoMarket -->
+              </a>
+                <!-- Button trigger modal -->
+                <button type="button" id="btnRegistro" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Registrate
+                </button>
+                
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Nuevo Usuario</h5>
+                                <button type="button" id="btnCerrar" class="btn-close" data-bs-dismiss="modal"  aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="formRegistro">
+                                    <div class="mb-3">
+                                      <label  class="form-label">Nombre de Usuario</label>
+                                      <input type="text" class="form-control" id="nombreUsuario" aria-describedby="emailHelp">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                                        <input type="password" class="form-control" id="password">
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="exampleInputPassword1" class="form-label">E-mail</label>
+                                        <input type="text" class="form-control" id="email" aria-describedby="emailHelp">
+                                        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label class="form-label">D.N.I</label>
+                                        <input type="text" class="form-control" id="dni" aria-describedby="emailHelp">
+                                      </div>
+                                      <div class="text-end">
+                                        <button type="submit" id="envioForm" class="btn btn-primary">Registrarse</button>
+                                      </div>
+                                  </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </nav>
+    </header>
+    <main id="main" class="d-flex justify-content-center">
+    </main>
+    <div id="div1" class="container text-center">
+
+    </div>
+    <div id="div2" class="container text-center">
+      <hr>
+        <h3 class="tituloTenencia"></h3>
+        <ul id="lista-dinamica">
+    
+        </ul>
+            <template id="template-li">
+                <hr>
+                <li class="list">
+                    <b>Transacción: </b> <span class="text">texto</span>
+                </li>
+                <hr>
+            </template>
+    </div>
+    
+
+    <script src="clases.js"></script>
+    <script src="proyecto.js"></script>
+</body>
+</html>
+
+
+
+<!-- Mientras nombre no este completo, utilizar while con falsy para que vuelva a ignresar:
+    let nombre=""
+     const n= nombre || "No ingreso nada"  
+    como nombre es falsy me va a imprimir el operador 2 ("No ingreso nada")-->
+     
