@@ -30,25 +30,57 @@ formRegistro.addEventListener("submit", nuevoUsuario);
 function nuevoUsuario (e) {
 
     e.preventDefault();
-    /* dniVerification(); */
     
     const Nombre=document.getElementById("nombreUsuario").value;
     const password=document.getElementById("password").value;
     const email=document.getElementById("email").value;
     const dniUsuario=document.getElementById("dni").value;
 
-    if( Nombre==""){
+    // Verificacion si no ingreso un nombre de usuario
+    while(Nombre==""){
         alert("Ingrese un nombre de usuario")
-
+        Nombre=document.getElementById("nombreUsuario").value
     }
-    else if(password.length<8){
+
+    //Verificacion de que el password sea de por lo menos 8 caracteres
+    while(password.length<8){
         alert("Ingrese un password de por lo menos 8 caracteres")
+        password=document.getElementById("password").value;
     }
 
-    else if(dniUsuario.length<8){
-        alert("Ingrese un dni valido")
+    //Verificar si mail contiene arroba y al menos un punto:
+
+    let contador=0;
+    for(let i of email){
+        if (i=="@" || i=="."){
+        contador++;
+    }}
+
+    if(contador<2){
+        alert("Ingreso un email incorrecto, asegurese que el email contenga un arroba y por lo menos un punto");
+        email=document.getElementById("email").value
     }
-       
+
+    // Verificar si dni es numerico y tiene longitud de por lo menos 8 numeros:
+
+    while(dniUsuario.length<8 || isNaN(dniUsuario)){
+        alert("Ingrese un dni que contenga solo numeros y por lo menos 8 caracteres")
+        dniUsuario=document.getElementById("dni").value;
+    }
+    
+    // Verificacion si dni ya esta registrado en la base de datos
+
+    const arrayPersonas=JSON.parse(localStorage.getItem("arrayPersonas"));
+    console.log(arrayPersonas)
+
+
+    const resultadoBuscar=arrayPersonas.find(i=>i.dni==dniUsuario)
+    console.log(resultadoBuscar)
+
+    if (resultadoBuscar!=undefined){
+        alert("DNI ya registrado en nuestra Base de Datos")
+        
+    }
     else{
         const usuarioRegistrado=new Usuario(Nombre,password,email,dniUsuario)
     
@@ -60,7 +92,10 @@ function nuevoUsuario (e) {
 
         usuarioRegistrado.saludar();
     }
+    
+
   
+    
 }
 
 
@@ -227,8 +262,8 @@ function mostrarFormulario2(){
   */
  
 
-//Funcion para verificar si DNI ingresado ya esta registrado:
-/* function dniVerification(){
+/* //Funcion para verificar si DNI ingresado ya esta registrado:
+ function dniVerification(){
     const arrayPersonas=JSON.parse(localStorage.getItem("arrayPersonas"));
     console.log(arrayPersonas)
     
@@ -240,4 +275,4 @@ function mostrarFormulario2(){
     }
  
     
-} */
+}  */
