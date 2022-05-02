@@ -6,20 +6,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">  
     <title>Document</title>
 </head>
 <body id="body">
     <header>
         <nav class="navbar navbar-light bg-light">
             <div class="container-fluid">
-              <a class="navbar-brand" href="#">
-                <img src="img/cm.png" alt="" width="150" height="45" class="d-inline-block align-text-top">
+              <a class="navbar-brand" href="http://127.0.0.1:5500/Entrega%20n%C2%BA2%20PF/index.html">
+                <img src="img/cm.png" href="http://127.0.0.1:5500/Entrega%20n%C2%BA2%20PF/index.html" alt="" width="150" height="45" class="d-inline-block align-text-top">
                 <!-- CryptoMarket -->
               </a>
                 <!-- Button trigger modal -->
-                <button type="button" id="btnRegistro" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Registrate
-                </button>
+                <span class="navbar-text border border-primary border border-3 rounded p-2" id="ingreso">
+                  
+                </span>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <button type="button" id="btnRegistro" class="btn btn-primary me-md-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Registrarme
+                  </button>
+                  <!-- Boton Menu usuario -->
+                  <div class="btn-group" id="menuUsuario">
+                    <button type="button" id="btnUsuario" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                      
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
+                      <li><a class="dropdown-item" id="tenencias" href="#">Tenencias</a></li>
+                      <li><a class="dropdown-item" href="#" id="misCompras">Mis Compras</a></li>
+                      <li><a class="dropdown-item" href="#">Ganancias</a></li>
+                    </ul>
+                  </div>
+                  <!-- boton salir -->
+                  <button type="button" id="btnSalir" class="btn btn-primary">
+                  Salir
+                  </button>
+                </div>
+                
                 
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -59,13 +81,28 @@
             </div>
           </nav>
     </header>
-    <main id="main" class="d-flex justify-content-center">
+    <main id="main" class="d-flex justify-content-center pt-5 px-5">
+      <table class="table table-hover main " id="tabla">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Par</th>
+            <th scope="col">Cotizacion</th>
+            <th scope="col">Interes (T.N.A)</th> 
+            <th scope="col">Operar</th>
+          </tr>
+        </thead>
+        <tbody id="bodyTabla">
+
+        </tbody>
+        
+    </table>
     </main>
     <div id="div1" class="container text-center">
 
     </div>
     <div id="div2" class="container text-center">
-      <hr>
         <h3 class="tituloTenencia"></h3>
         <ul id="lista-dinamica">
     
@@ -78,10 +115,23 @@
                 <hr>
             </template>
     </div>
+  <!--   <footer class="text-center text-white fixed-bottom" style="background-color: #e6e4e4;">
+      
+      <div class="container p-2"></div>
+      
     
+     
+      <div class="text-center p-2" style="background-color: rgba(199, 199, 199, 0.2);">
+        © 2022 Copyright:
+        <a class="text-white" href="https://mdbootstrap.com/">CrytpoMarket</a>
+      </div>
+     
+    </footer> -->
 
     <script src="clases.js"></script>
     <script src="proyecto.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </body>
 </html>
 
