@@ -146,7 +146,9 @@ function nuevoUsuario (e) {
 
 function verMisCompras(){
     misCompras.addEventListener("click",()=>{  
-        registroCompras();  
+        tabla.style.display="none";
+        div1.style.display="none";
+        div2.style.display="block";
     
     })
 }
@@ -155,37 +157,63 @@ function verMisCompras(){
 
 //Visualizacion de Cryptos:
 
-verCrytpos();
+const verCrytpos= async()=>{
+    const respuesta= 
+    await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin%2Cethereum%2Cdai%2Ctether%2Cusd-coin%2Cterra-luna%2Csolana%2Ccardano%2Caave&order=market_cap_desc&per_page=100&page=1&sparkline=false'`)
 
+    const data= await respuesta.json();
 
-function verCrytpos(){
-    
-    cryptos.forEach(element => {
-        filasTabla.innerHTML+=
-        `<tr>
-            <th scope="row" class="bl-3">${element.codigo}</th>
-            <td><img src=${element.img} class="img-fluid" alt="Responsive image" height="36" width="36"> ${element.nombre}</td>
-            <td>${element.par}</td>
-            <td>$ ${element.cotizacion} ARS</td>
-            <td>${element.interes}%</td>
-            <td><a id=${element.codigo} class="btn btn-success">Comprar</a></td>
+    console.log(respuesta)
+    console.log(data)
+
+        data.forEach(element => {
+
+            //Mostramos los valores formato moneda
+            const marketCap=new Intl.NumberFormat('en-US', {style: 'currency',currency: 'USD'}).format(element.market_cap);
+            const precioArs=(element.current_price)*200
+            const precio=new Intl.NumberFormat('en-US', {style: 'currency',currency: 'USD'}).format(precioArs);
             
-        </tr>` 
-  
+
+            //const Varacion de Precio
+            const variacionPrecio=element.price_change_percentage_24h
+
+            //Creamos las filas de la tabla
+            filasTabla.innerHTML+=
+        `<tr>
+            <th scope="row" class="bl-3">${data.indexOf(element)}</th>
+            <td><img src=${element.image} class="img-fluid" alt="Responsive image" height="36" width="36"> ${element.name}</td>
+            <td>${element.symbol.toUpperCase()} /USD</td>
+            <td>${precio}</td>
+            <td class="vp">${variacionPrecio.toFixed(2)}%</td>
+            <td>${marketCap}</td>
+            <td><a id=${element.market_cap_rank} class="btn btn-success">Comprar</a></td>
+            
+        </tr>`
+        
+                /* //Formato para la variacion diaria
+                const vp=document.getElementsByClassName("vp");
+
+                    if (variacionPrecio>0){
+                        vp.classList.add("success")
+                        console.log("mayor")
+                    }
+                    else{
+                        vp.classList.add("danger")
+                        
+                    }
+                */
     });
-}
- 
-
-
 
 //Evento al apretar boton Comprar
 
- botonosCrypto();
+botonosCrypto();
+
 
 function botonosCrypto(){
-    cryptos.forEach(i=>{
-        let botonComprar=document.getElementById(`${i.codigo}`)
+    data.forEach(i=>{
+        let botonComprar=document.getElementById(`${i.market_cap_rank}`)
         botonComprar.addEventListener("click", (e)=>{  
+            console.log(botonComprar)
             if (arrayUsuarios.length==0){
                 Swal.fire({
                     icon: 'error',
@@ -195,7 +223,7 @@ function botonosCrypto(){
             }
             else{
                 e.stopPropagation();
-                ventanaCompra(i.codigo);
+                ventanaCompra(i.market_cap_rank);
                 if(porfolio.length>1){
                     porfolio.shift();
                 }
@@ -206,11 +234,14 @@ function botonosCrypto(){
 })
 
 } 
- 
+
+
 //Funcion para encontrar el objeto que el usuario eligio: 
 
-function ventanaCompra(codigo){
-    let mostrarCompra=cryptos.find(elemento=>elemento.codigo==codigo)
+function ventanaCompra(market_cap_rank){
+    
+    let mostrarCompra=data.find(elemento=>elemento.market_cap_rank==market_cap_rank)
+    console.log(mostrarCompra)
     porfolio.push(mostrarCompra)
     console.log(porfolio)
     
@@ -219,17 +250,18 @@ function ventanaCompra(codigo){
 
 }
 
+
 //Funcion para mostrar formulario para ingresas monto:
 
 function formularioCompras(mostrarCompra){
     
-    formularioCompra.id=`formCompra${mostrarCompra.codigo}`
+    formularioCompra.id=`formCompra${mostrarCompra.id}`
 
     formularioCompra.innerHTML = `<hr>
-    <h3>${mostrarCompra.nombre}</h3>
-    <label>ARS a ${mostrarCompra.par}</label>
-    <input type="number" id="pesos${mostrarCompra.codigo}">
-    <input type="submit" id="aceptarPesos${mostrarCompra.codigo}" value="Aceptar">
+    <h3>${mostrarCompra.name}</h3>
+    <label>ARS a ${mostrarCompra.symbol.toUpperCase()}</label>
+    <input type="number" id="pesos${mostrarCompra.id}">
+    <input type="submit" id="aceptarPesos${mostrarCompra.id}" value="Aceptar">
     <hr>
     `
     div1.appendChild(formularioCompra)
@@ -239,8 +271,6 @@ function formularioCompras(mostrarCompra){
     
 }
 
-
-
 //Obtencion del monto de dinero ingresado por el usuario: 
 calculos(formularioCompra)
 
@@ -249,19 +279,19 @@ function calculos(item){
     item.addEventListener("submit", (e1)=>{
         e1.preventDefault(); 
         e1.stopPropagation();  
-        let cal5=document.getElementById(`pesos${porfolio[0].codigo}`).value
-        let cal6=(cal5/porfolio[0].cotizacion)
+        let cal5=document.getElementById(`pesos${porfolio[0].id}`).value
+        let cal6=(cal5/porfolio[0].current_price)
         console.log(cal6)
         porfolio[0].cantidad=cal6.toFixed(3)
         Swal.fire({
             position: 'top-center',
             icon: 'success',
-            title: `Felicitaciones\nUsted compro ${cal6.toFixed(3)} ${porfolio[0].nombre}`,
+            title: `Felicitaciones\nUsted compro ${cal6.toFixed(3)} ${porfolio[0].name}`,
             showConfirmButton: false,
             timer: 1200
           })
              
-    
+        registroCompras();  
             
     })
          
@@ -269,13 +299,13 @@ function calculos(item){
 }
 
 
+
  //Lista para ver las Compras Realizadas
-function registroCompras(){
+ function registroCompras(){
     
     let date = new Date();
 
-    tabla.style.display="none";
-    div1.style.display="none";
+    div2.style.display="none";
 
     const h3=document.querySelector(".tituloTenencia")
     h3.innerHTML="Transacciones Realizadas"
@@ -293,7 +323,7 @@ function registroCompras(){
     else{
 
      porfolio.forEach((item) => {
-        template.querySelector("span").textContent = `El ${date.toISOString().split('T')[0]} compró ${item.cantidad} ${item.nombre}`;
+        template.querySelector("span").textContent = `El ${date.toISOString().split('T')[0]} compró ${item.cantidad} ${item.name}`;
         const clone = template.cloneNode(true);
         fragment.appendChild(clone);
     });
@@ -304,6 +334,15 @@ function registroCompras(){
 
 }
  
+
+
+} //para cerrar verCryptos()
+
+
+verCrytpos();
+
+
+
 
 //Btn para cerrar secion:
 
@@ -318,9 +357,7 @@ btnSalir.addEventListener("click", ()=>{
     btnSalir.style.display="none";
     div2.style.display="none";
     div1.style.display="none";
+    tabla.style.display="block";
 })
-
-
-
 
 
