@@ -24,7 +24,7 @@ const menuUsuario=document.getElementById("menuUsuario");
 
 const btnUsuario=document.getElementById("btnUsuario");
 
-const btnTenencias=document.getElementById("tenencias");
+const btnMonedas=document.getElementById("misMonedas");
 
 const tarjetas=document.querySelector(".card mt-5 ms-5");
 
@@ -34,10 +34,25 @@ const tabla=document.getElementById("tabla");
 
 const misCompras=document.getElementById("misCompras");
 
+const span = document.getElementsByClassName("close")[0];
+
+const span2 = document.getElementsByClassName("close")[1];
+
+const contenidoModal=document.getElementById("contenidoModal");
+
+const bodyTablaMonedas=document.getElementById("bodyTablaMonedas");
+
+const div3=document.getElementById("div3");
+
+let cal5=0;
+
+
 //Bloqueo de display para mostrar nombre de usuario y menu:
 usuarioIngreso.style.display="none";
 menuUsuario.style.display="none";
 btnSalir.style.display="none";
+div3.style.display="none";
+
 
 //Lista para guardar datos del usuario:
 const arrayUsuarios=[];  
@@ -133,7 +148,16 @@ function nuevoUsuario (e) {
         menuUsuario.style.display="block";
         btnSalir.style.display="block";
         btnUsuario.textContent=`${Nombre}`
+        
+        window.onclick = function(event) {
+            if (event.target == modal) {
+              modal.style.display = "none";
+            }
+          }    
+
+
         verMisCompras();
+        verMisMonedas();  
         
 
     }
@@ -146,11 +170,59 @@ function nuevoUsuario (e) {
 
 function verMisCompras(){
     misCompras.addEventListener("click",()=>{  
-        tabla.style.display="none";
-        div1.style.display="none";
-        div2.style.display="block";
+        
+        if (porfolio.length==0 || cal5==0){
+            Swal.fire({
+                icon: 'error',
+                title: "No posee transacciones realizadas al momento",
+                
+              })
+            
+        }
+        else {
+            tabla.style.display = "none";
+            div1.style.display = "none";
+            div2.style.display = "block";
+        }
     
     })
+}
+
+//Mis Monedas Boton: 
+
+
+
+function verMisMonedas(){
+    btnMonedas.addEventListener("click",()=>{ 
+        console.log("hola") 
+        
+        if (porfolio.length==0 || cal5==0){
+            Swal.fire({
+                icon: 'error',
+                title: "No posee Monedas",
+
+              })
+            
+        }
+        else {
+            div3.style.display = "block"
+            window.onclick = function (event) {
+                if (event.target == div3) {
+                    div3.style.display = "none";
+                }
+            }
+           
+
+
+        }
+    
+ })
+}
+
+//Funcion para cerrar Modal Monedas:
+
+ span2.onclick = function () {
+    div3.style.display = "none";
 }
 
 
@@ -162,9 +234,13 @@ const verCrytpos= async()=>{
     await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin%2Cethereum%2Cdai%2Ctether%2Cusd-coin%2Cterra-luna%2Csolana%2Ccardano%2Caave&order=market_cap_desc&per_page=100&page=1&sparkline=false'`)
 
     const data= await respuesta.json();
+    return data
+    
+    
+}
 
-    console.log(respuesta)
-    console.log(data)
+
+const data= verCrytpos().then(data => {
 
         data.forEach(element => {
 
@@ -184,32 +260,33 @@ const verCrytpos= async()=>{
             <td><img src=${element.image} class="img-fluid" alt="Responsive image" height="36" width="36"> ${element.name}</td>
             <td>${element.symbol.toUpperCase()} /USD</td>
             <td>${precio}</td>
-            <td class="vp">${variacionPrecio.toFixed(2)}%</td>
+            <td id=crypto${data.indexOf(element)}>${variacionPrecio.toFixed(2)}%</td>
             <td>${marketCap}</td>
             <td><a id=${element.market_cap_rank} class="btn btn-success">Comprar</a></td>
             
         </tr>`
-        
-                /* //Formato para la variacion diaria
-                const vp=document.getElementsByClassName("vp");
-
-                    if (variacionPrecio>0){
-                        vp.classList.add("success")
-                        console.log("mayor")
-                    }
-                    else{
-                        vp.classList.add("danger")
-                        
-                    }
-                */
+                 
+                
     });
+        /* for (i = 0; i < 9; i++) {
+            const id = document.getElementById(`crypto${i}`).textContent
+            if (parseInt(id)>0){
+                id.classList.add("text-success")
+            }
+            else{
+                id.classList.add("text-danger")
+            }
+            
+
+        } */
+
+    botonosCrypto(data);
+})
+
 
 //Evento al apretar boton Comprar
 
-botonosCrypto();
-
-
-function botonosCrypto(){
+function botonosCrypto(data){
     data.forEach(i=>{
         let botonComprar=document.getElementById(`${i.market_cap_rank}`)
         botonComprar.addEventListener("click", (e)=>{  
@@ -217,13 +294,18 @@ function botonosCrypto(){
             if (arrayUsuarios.length==0){
                 Swal.fire({
                     icon: 'error',
-                    title: 'Oops...',
-                    text: 'Primero debes estar registrado para poder compara ',
+                    title: 'Primero debes estar registrado para poder comprar',
                   })
             }
             else{
                 e.stopPropagation();
-                ventanaCompra(i.market_cap_rank);
+                ventanaCompra(i.market_cap_rank, data);
+                div1.style.display = "block"
+                window.onclick = function(event) {
+                    if (event.target == div1) {
+                      div1.style.display = "none";
+                    }
+                  } 
                 if(porfolio.length>1){
                     porfolio.shift();
                 }
@@ -238,7 +320,7 @@ function botonosCrypto(){
 
 //Funcion para encontrar el objeto que el usuario eligio: 
 
-function ventanaCompra(market_cap_rank){
+function ventanaCompra(market_cap_rank ,data){
     
     let mostrarCompra=data.find(elemento=>elemento.market_cap_rank==market_cap_rank)
     console.log(mostrarCompra)
@@ -257,50 +339,72 @@ function formularioCompras(mostrarCompra){
     
     formularioCompra.id=`formCompra${mostrarCompra.id}`
 
-    formularioCompra.innerHTML = `<hr>
-    <h3>${mostrarCompra.name}</h3>
-    <label>ARS a ${mostrarCompra.symbol.toUpperCase()}</label>
-    <input type="number" id="pesos${mostrarCompra.id}">
-    <input type="submit" id="aceptarPesos${mostrarCompra.id}" value="Aceptar">
-    <hr>
+    formularioCompra.innerHTML = `
+    
+    <h3><img src=${mostrarCompra.image} class="img-fluid" alt="Responsive image" height="36" width="36">${mostrarCompra.name}</h3>
+    <input type="number" class="text-center"  placeholder="$ARS a ${mostrarCompra.symbol.toUpperCase()}" id="pesos${mostrarCompra.id}" >
+    <input type="submit" id="aceptarPesos${mostrarCompra.id}" class="aceptar" value="Aceptar">
     `
-    div1.appendChild(formularioCompra)
-    
+    contenidoModal.appendChild(formularioCompra)
 
-    
-    
+
 }
+
+
+//Funciones para cerrar Modal Compra
+
+span.onclick = function() {
+    div1.style.display = "none";
+  }
+
+
 
 //Obtencion del monto de dinero ingresado por el usuario: 
 calculos(formularioCompra)
+
+
 
 function calculos(item){
     
     item.addEventListener("submit", (e1)=>{
         e1.preventDefault(); 
         e1.stopPropagation();  
-        let cal5=document.getElementById(`pesos${porfolio[0].id}`).value
-        let cal6=(cal5/porfolio[0].current_price)
-        console.log(cal6)
-        porfolio[0].cantidad=cal6.toFixed(3)
-        Swal.fire({
-            position: 'top-center',
-            icon: 'success',
-            title: `Felicitaciones\nUsted compro ${cal6.toFixed(3)} ${porfolio[0].name}`,
-            showConfirmButton: false,
-            timer: 1200
-          })
-             
-        registroCompras();  
+        cal5=document.getElementById(`pesos${porfolio[0].id}`).value
+        console.log(cal5)
+        if (cal5==0){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Ingresa un valor',
+              })
+        }
+        else {
+            let cal6 = (cal5 / (porfolio[0].current_price * 200))
+            console.log(cal6)
+            porfolio[0].cantidad = cal6.toFixed(5)
+            Swal.fire({
+                position: 'top-center',
+                icon: 'success',
+                title: `Felicitaciones\nUsted compro ${cal6.toFixed(5)} ${porfolio[0].name}`,
+                showConfirmButton: false,
+                timer: 1200
+            })
             
+            div1.style.display = "none";
+            
+            
+        }     
+          
+        registroCompras();
+        monedasAdquiridas();
+
     })
-         
     
 }
+ 
 
+ //Lista para ver las Compras Realizadas:
 
-
- //Lista para ver las Compras Realizadas
  function registroCompras(){
     
     let date = new Date();
@@ -315,19 +419,12 @@ function calculos(item){
     const fragment = document.createDocumentFragment();
     const template = document.querySelector("#template-li").content;
     
-    if(porfolio.length==0){
-        template.querySelector("span").textContent = `No posee transacciones hasta el momento`
-        const clone = template.cloneNode(true);
-        fragment.appendChild(clone);
-    }
-    else{
-
      porfolio.forEach((item) => {
         template.querySelector("span").textContent = `El ${date.toISOString().split('T')[0]} compró ${item.cantidad} ${item.name}`;
         const clone = template.cloneNode(true);
         fragment.appendChild(clone);
     });
-    }
+    
     lista.appendChild(fragment); 
     div2.appendChild(lista) 
     
@@ -335,12 +432,19 @@ function calculos(item){
 }
  
 
+//Funcion para ver las monedas en la lista desplegable del usuario:
 
-} //para cerrar verCryptos()
-
-
-verCrytpos();
-
+function monedasAdquiridas(){
+    porfolio.forEach(element=>{
+        const cantidadARS= (200/element.cantidad).toFixed(2)
+        bodyTablaMonedas.innerHTML+=
+        `<tr>
+            <td><img src=${element.image} class="img-fluid" alt="Responsive image" height="36" width="36"> ${element.name}</td>
+            <td class="text-right">${element.cantidad} ${element.symbol.toUpperCase()}</td>
+        </tr>`
+            
+    })
+}
 
 
 
@@ -359,5 +463,3 @@ btnSalir.addEventListener("click", ()=>{
     div1.style.display="none";
     tabla.style.display="block";
 })
-
-
