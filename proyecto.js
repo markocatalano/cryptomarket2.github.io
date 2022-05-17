@@ -59,6 +59,7 @@ const arrayUsuarios=[];
 
 //Array para guardar cryptos elegidas:
 const porfolio=[];
+
  
 //Evento del submit del form:
 formRegistro.addEventListener("submit", nuevoUsuario);
@@ -101,8 +102,8 @@ function nuevoUsuario (e) {
 
     // Verificar si dni es numerico y tiene longitud de por lo menos 8 numeros:
 
-    while(dniUsuario.length<8 || isNaN(dniUsuario)){
-        alert("Ingrese un dni que contenga solo numeros y por lo menos 8 caracteres")
+    while(dniUsuario.length!=8 || isNaN(dniUsuario)){
+        alert("Ingrese un dni que contenga solo numeros y 8 caracteres")
         dniUsuario=document.getElementById("dni").value;
     }
     
@@ -173,7 +174,7 @@ function verMisCompras(){
         
         if (porfolio.length==0 || cal5==0){
             Swal.fire({
-                icon: 'error',
+                icon: 'warning',
                 title: "No posee transacciones realizadas al momento",
                 
               })
@@ -198,7 +199,7 @@ function verMisMonedas(){
         
         if (porfolio.length==0 || cal5==0){
             Swal.fire({
-                icon: 'error',
+                icon: 'warning',
                 title: "No posee Monedas",
 
               })
@@ -212,8 +213,6 @@ function verMisMonedas(){
                 }
             }
            
-
-
         }
     
  })
@@ -235,7 +234,6 @@ const verCrytpos= async()=>{
 
     const data= await respuesta.json();
     return data
-    
     
 }
 
@@ -268,17 +266,20 @@ const data= verCrytpos().then(data => {
                  
                 
     });
-        /* for (i = 0; i < 9; i++) {
-            const id = document.getElementById(`crypto${i}`).textContent
-            if (parseInt(id)>0){
-                id.classList.add("text-success")
+        for (i = 0; i < 9; i++) {
+            const id = document.getElementById(`crypto${i}`).textContent;
+            const ide=document.getElementById(`crypto${i}`);
+            console.log(id)
+
+            if (parseFloat(id)>0.00){
+                ide.classList.add("text-success")
             }
             else{
-                id.classList.add("text-danger")
+                ide.classList.add("text-danger")
             }
             
 
-        } */
+        }
 
     botonosCrypto(data);
 })
@@ -329,7 +330,6 @@ function ventanaCompra(market_cap_rank ,data){
     
     formularioCompras(mostrarCompra);
 
-
 }
 
 
@@ -345,8 +345,7 @@ function formularioCompras(mostrarCompra){
     <input type="number" class="text-center"  placeholder="$ARS a ${mostrarCompra.symbol.toUpperCase()}" id="pesos${mostrarCompra.id}" >
     <input type="submit" id="aceptarPesos${mostrarCompra.id}" class="aceptar" value="Aceptar">
     `
-    contenidoModal.appendChild(formularioCompra)
-
+    contenidoModal.appendChild(formularioCompra);
 
 }
 
@@ -355,8 +354,8 @@ function formularioCompras(mostrarCompra){
 
 span.onclick = function() {
     div1.style.display = "none";
-  }
 
+  }
 
 
 //Obtencion del monto de dinero ingresado por el usuario: 

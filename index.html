@@ -13,8 +13,8 @@
     <header>
         <nav class="navbar navbar-light bg-light">
             <div class="container-fluid">
-              <a class="navbar-brand" href="http://127.0.0.1:5500/Entrega%20n%C2%BA2%20PF/index.html">
-                <img src="img2/cm.png" href="http://127.0.0.1:5500/Entrega%20n%C2%BA2%20PF/index.html" alt="" width="150" height="45" class="d-inline-block align-text-top">
+              <a class="navbar-brand" href="">
+                <img src="img2/cm.png" href="https://markocatalano.github.io/cryptomarket2.github.io/" alt="" width="150" height="45" class="d-inline-block align-text-top">
                 <!-- CryptoMarket -->
               </a>
                 <!-- Button trigger modal -->
@@ -66,7 +66,7 @@
                                       </div>
                                       <div class="mb-3">
                                         <label class="form-label">D.N.I</label>
-                                        <input type="text" class="form-control" id="dni" aria-describedby="emailHelp">
+                                        <input type="text" maxlength="8" class="form-control" id="dni" aria-describedby="emailHelp">
                                       </div>
                                       <div class="text-end">
                                         <button type="submit" id="envioForm" class="btn btn-primary">Registrarse</button>
@@ -88,7 +88,7 @@
             <th scope="col">Nombre</th>
             <th scope="col">Par</th>
             <th scope="col">Cotizacion(ARS)</th>
-            <th scope="col">Variación(24Hr)</th>
+            <th scope="col">Variación(24h)</th>
             <th scope="col">MarketCap(US$)</th> 
             <th scope="col">Operar</th>
           </tr>
@@ -119,10 +119,11 @@
             </template>
     </div>
     <div id="div3" class="modal">
-      <div id="monedasModal" class="modal-content1 container">
+      <div id="monedasModal" class="modal-content2 container">
         <span class="close">&times;</span>
         <table class="table table-hover main " id="tablaMonedas">
           <thead>
+            <h5 class="text-center">Mis monedas</h5>
             <tr>
               <th scope="col">Nombre</th>
               <th scope="col">Cantidad</th>
